@@ -1,13 +1,12 @@
 import {Game} from "./Components/Game";
-import {Stage, Text} from "@pixi/react";
+import {Stage} from "@pixi/react";
 import {NewGame} from "./Components/NewGame";
-import {textStyle} from "./Components/textStyle";
 import {observer} from "mobx-react-lite";
 import {useStores} from "./store";
 
 const App = observer(() => {
   const { gameStore } = useStores()
-  const { setIsEndGame, setScore, score, isEndGame } = gameStore
+  const { setIsEndGame, setScore, isEndGame } = gameStore
   const handleResetGame = () => {
     setIsEndGame(false)
     setScore(0)
@@ -17,15 +16,7 @@ const App = observer(() => {
       {isEndGame ? (
         <NewGame handleResetGame={handleResetGame} />
       ) : (
-        <>
-          <Text
-            text={`Score: ${score}`}
-            x={5}
-            y={5}
-            style={textStyle}
-          />
-          <Game />
-        </>
+        <Game />
       )}
     </Stage>
   );

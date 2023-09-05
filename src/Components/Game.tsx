@@ -1,9 +1,10 @@
-import {useApp} from "@pixi/react"
+import {Text, useApp} from "@pixi/react"
 import '@pixi/events'
 import {useEffect, useMemo, useState} from "react"
 import {Bunny} from "./Bunny"
 import {observer} from "mobx-react-lite";
 import {useStores} from "../store";
+import {textStyle} from "./textStyle";
 
 export const Game = observer(() => {
     const app = useApp()
@@ -11,7 +12,7 @@ export const Game = observer(() => {
     const [bunnies, setBunnies] = useState(1)
     const { score } = gameStore
 
-    app.renderer.events.cursorStyles.default = 'url(\'https://pixijs.com/assets/bunny.png\'),auto'
+    app.renderer.events.cursorStyles.default = 'url(\'https://pixijs.com/assets/bunny.png\')'
 
     useEffect(() => {
         if (score && score % 10 === 0) {
@@ -38,6 +39,12 @@ export const Game = observer(() => {
 
     return (
         <>
+            <Text
+              text={`Score: ${score}`}
+              x={5}
+              y={5}
+              style={textStyle}
+            />
             {renderBunnies}
         </>
     )
