@@ -1,21 +1,23 @@
 import {Sprite, useApp, useTick} from "@pixi/react";
-import {Dispatch, SetStateAction, useCallback, useRef, useState} from "react"
+import {useCallback, useRef, useState} from "react"
 import BunnyImage from "../assets/bunny1.webp"
+import {observer} from "mobx-react-lite";
+import {useStores} from "../store";
 
 const anchor = { x: 0.5, y: 1 }
 
 type BunnyProps = {
     xvalue: number
-    score: number
-    setIsEndGame: (value: boolean) => void
-    setScore:  Dispatch<SetStateAction<number>>
 }
-export const Bunny = ({ xvalue, setScore, score, setIsEndGame }: BunnyProps) => {
+export const Bunny = observer(({ xvalue }: BunnyProps) => {
     const app = useApp()
+    const { gameStore } = useStores()
     const iter = useRef(0);
     const [x, setX] = useState(xvalue)
     const [motion, setMotion] = useState({ y: 0, x: xvalue })
     const [isVisible, setIsVisible] = useState(true)
+    
+    const { setScore, score, setIsEndGame } = gameStore
 
     useTick((delta) => {
         let i = (iter.current += (1 + score/100) * delta);
@@ -34,13 +36,13 @@ export const Bunny = ({ xvalue, setScore, score, setIsEndGame }: BunnyProps) => 
 
     const handlePointerover = useCallback(() => {
         setIsVisible(false)
-        setScore((prev) => prev + 1)
-    }, [setScore])
+        setScore(score + 1)
+    }, [score, setScore])
 
     return (
         <Sprite
             {...motion}
-            interactive={true}
+            eventMode='static'
             image={BunnyImage}
             anchor={anchor}
             width={70}
@@ -48,4 +50,4 @@ export const Bunny = ({ xvalue, setScore, score, setIsEndGame }: BunnyProps) => 
             pointerover={handlePointerover}
         />
     );
-};
+})

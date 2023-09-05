@@ -2,15 +2,17 @@ import {Sprite, Text, useApp} from "@pixi/react"
 import PlayAgainBtn from "../assets/play_button.png"
 import PlayBtn from "../assets/start-new-game-button.png"
 import {textStyle} from "./textStyle"
+import {observer} from "mobx-react-lite";
+import {useStores} from "../store";
 
 type NewGameProps = {
     handleResetGame: () => void
-    setIsNewGame: (value: boolean) => void
-    isNewGame: boolean
-    score: number
 }
-export const NewGame = ({ setIsNewGame, isNewGame, score, handleResetGame }: NewGameProps) => {
+export const NewGame = observer(({ handleResetGame }: NewGameProps) => {
     const app = useApp()
+    const { gameStore } = useStores()
+
+    const { score, isNewGame, setIsNewGame } = gameStore
     const newBestScore = localStorage.getItem('bestScore') ?? '0'
 
     const handleStartAgain = () => {
@@ -30,7 +32,7 @@ export const NewGame = ({ setIsNewGame, isNewGame, score, handleResetGame }: New
         >
             {isNewGame ? (
                 <Sprite
-                    interactive={true}
+                    eventMode='static'
                     image={PlayBtn}
                     x={app.screen.width/2}
                     y={app.screen.height/2 + 50}
@@ -57,7 +59,7 @@ export const NewGame = ({ setIsNewGame, isNewGame, score, handleResetGame }: New
                         style={textStyle}
                     />
                     <Sprite
-                        interactive={true}
+                        eventMode='static'
                         image={PlayAgainBtn}
                         x={app.screen.width/2}
                         y={app.screen.height/2 + 50}
@@ -71,4 +73,4 @@ export const NewGame = ({ setIsNewGame, isNewGame, score, handleResetGame }: New
             )}
         </Sprite>
     )
-}
+})

@@ -1,16 +1,16 @@
 import {useApp} from "@pixi/react"
 import '@pixi/events'
-import {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react"
+import {useEffect, useMemo, useState} from "react"
 import {Bunny} from "./Bunny"
+import {observer} from "mobx-react-lite";
+import {useStores} from "../store";
 
-type GameProps = {
-    score: number
-    setScore: Dispatch<SetStateAction<number>>
-    setIsEndGame: (value: boolean) => void
-}
-export const Game = ({ score, setScore, setIsEndGame }: GameProps) => {
+export const Game = observer(() => {
     const app = useApp()
+    const { gameStore } = useStores()
     const [bunnies, setBunnies] = useState(1)
+    const { score } = gameStore
+
     app.renderer.events.cursorStyles.default = 'url(\'https://pixijs.com/assets/bunny.png\'),auto'
 
     useEffect(() => {
@@ -30,18 +30,15 @@ export const Game = ({ score, setScore, setIsEndGame }: GameProps) => {
               <Bunny
                 key={idx}
                 xvalue={Math.random()*(app.screen.width - 100) + 50}
-                setScore={setScore}
-                setIsEndGame={setIsEndGame}
-                score={score}
               />
             ))
         }
         return res
-    }, [app.screen.width, bunnies, score, setIsEndGame, setScore])
+    }, [app.screen.width, bunnies])
 
     return (
         <>
             {renderBunnies}
         </>
     )
-}
+})
